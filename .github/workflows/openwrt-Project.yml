@@ -16,18 +16,18 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
-  schedule:
-    - cron: 0 21 */7 * * 
+ # schedule:
+ #   - cron: 0 21 */7 * * 
 
 env:
-  REPO_URL: https://github.com/immortalwrt/immortalwrt
-  REPO_BRANCH: openwrt-21.02
+  REPO_URL: https://github.com/cxcl20057/immortalwrt
+  REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: openwrt-Project.config
+  CONFIG_FILE: K2P.config
   DIY_P1_SH: openwrt-Project.sh
   DIY_P2_SH: openwrt-Project2.sh
   SSH_ACTIONS: false
-  UPLOAD_BIN_DIR: true
+  UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
   UPLOAD_WETRANSFER: true
@@ -135,7 +135,7 @@ jobs:
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
       with:
-        name: openwrt-Project${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        name: openwrt-Project-R2S${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
     - name: 上传固件到NN网盘
@@ -161,7 +161,6 @@ jobs:
       run: |
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         touch release.txt
-        echo "功能介绍：包含bypass、定时重拨、Passwall、SSR、iStore应用商店、Dockerman、DDNS、samba4.0、屏蔽大师、ADG、UPnP等。其他应用可以自行在应用商店选择安装。" >> release.txt
         echo "[固件源码](https://github.com/immortalwrt/immortalwrt/tree/master)" >> release.txt
         echo "由衷感谢所有为openwrt无私奉献的大佬们" >> release.txt
         echo "📥 固件下载" >> release.txt
@@ -174,7 +173,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        name: ${{ env.FILE_TIME }} 「 openwrt-Project-X86-64 」
+        name: ${{ env.FILE_TIME }} 「 openwrt-Project-R2S 」
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
